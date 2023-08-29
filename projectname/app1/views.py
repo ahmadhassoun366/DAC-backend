@@ -31,10 +31,10 @@ class ManagerRegisterCreateAPIView(APIView):
             user.save()
 
             # Create a Seeker instance and associate it with the newly created user
-            manager_data = {
+            manager = {
                 'user': user.id,
             }
-            manager_serializer = PostManagerSerializer(data=manager_data)
+            manager_serializer = PostManagerSerializer(data=auditor_data)
             if manager_serializer.is_valid():
                 manager_serializer.save()
             else:

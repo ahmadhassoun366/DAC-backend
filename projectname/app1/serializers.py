@@ -27,16 +27,6 @@ class POSTUserSerializer(serializers.ModelSerializer):
         return user
 
     
-class POSTUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = '__all__'
-
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = get_user_model().objects.create(password=make_password(password), **validated_data)
-        return user
-
 
 
 class ManagerSerializer(serializers.ModelSerializer):

@@ -7,8 +7,8 @@ from .views import *
 
 urlpatterns = [
 
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('api/Manager/Register', ManagerRegisterCreateAPIView.as_view(), name='manager_register'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('manager/register', ManagerRegisterCreateAPIView.as_view(), name='Manager_register'),
 ]

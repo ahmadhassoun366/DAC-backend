@@ -54,6 +54,10 @@ class CustomUser(AbstractUser):
 
 
 class Manager(models.Model):
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
     class Meta:
         verbose_name = "Manager"
         verbose_name_plural = "Managers"
@@ -63,6 +67,8 @@ class Manager(models.Model):
     address = models.CharField(max_length=30, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     country = models.CharField(max_length=30, null=True, blank=True)
-
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
     def __str__(self):
         return f"{self.user}"
+
+

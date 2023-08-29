@@ -28,7 +28,5 @@ class EmailUserAdmin(UserAdmin):
 class ManagerAdmin(admin.ModelAdmin):
     list_display = ('user', 'title', 'company','address','city','country')
 
-
-
 admin.site.register(CustomUser, EmailUserAdmin)
 admin.site.register(Manager, ManagerAdmin)
