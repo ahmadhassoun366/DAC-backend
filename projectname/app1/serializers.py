@@ -45,3 +45,19 @@ class PostManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manager
         fields = "__all__"
+
+# use it with POST request
+class PostCompanySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Company
+        fields = "__all__"
+
+
+# use it with GET request
+class GetCompanySerializer(serializers.ModelSerializer):
+    manager = ManagerSerializer(read_only=True)
+
+    class Meta:
+        model = Company
+        fields = "__all__"

@@ -44,3 +44,40 @@ class ManagerRegisterCreateAPIView(APIView):
 
             return Response(serializerUser.data, status=status.HTTP_201_CREATED)
         return Response(serializerUser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @permission_classes([IsAuthenticated])
+class ManagerViewSet(APIView):
+    def get(self, request, user_id):
+        # Logic for handling GET request
+        manager = Manager.objects.filter(user=user_id)  
+        serializer = ManagerSerializer (manager, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
+
+# @permission_classes([IsAuthenticated])
+class CompanyRegisterCreateAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        companyData = {
+            'manager': data.get('manager'),
+            'brand': data.get('brand'),
+            'name': data.get('name'),
+            'logo': data.get('logo'),
+            'taxIdentification': data.get('taxIdentification'),
+            'commercialRegister': data.get('commercialRegister'),
+            'phone': data.get('phone'),
+            'Address': data.get('Address'),
+        }
+        print(companyData)
+
+        serializer = PostCompanySerializer(data=companyData)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @permission_classes([IsAuthenticated])
+class CompanyViewSet(APIView):
+    def get(self, request, manager_id): 
+        company = Company.objects.filter(manager=manager_id)
+        serializer = GetCompanySerializer(company, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

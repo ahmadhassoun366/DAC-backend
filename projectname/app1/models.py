@@ -72,3 +72,20 @@ class Manager(models.Model):
         return f"{self.user}"
 
 
+
+
+class Company(models.Model):
+    class Meta:
+        verbose_name = "Company"
+        verbose_name_plural = "Companies"
+    logo = models.ImageField(upload_to='static/company_images', null=True, blank=True)
+    name = models.CharField(max_length=200)
+    manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='companies')
+    brand = models.CharField(max_length=200, null=True, blank=True)
+    taxIdentification = models.CharField(max_length=20, null=True, blank=True)
+    commercialRegister = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    Address = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
