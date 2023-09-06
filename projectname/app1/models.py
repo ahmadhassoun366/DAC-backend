@@ -113,7 +113,7 @@ class Item(models.Model):
     expense = models.FloatField(null=True, blank=True)
     final_good = models.BooleanField(default=True)
     change_inv_acc = models.BooleanField(default=False)
-    inventory_acc = models.CharField(max_length=20, choices=[('A', 'Inventory Account A'), ('B', 'Inventory Account B')])
+    inventory_acc = models.CharField(max_length=20, choices=[('A', 'Inventory Account A'), ('B', 'Inventory Account B')], null=True, blank=True , default='A')
     # image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
 
     def calculate_total(self):

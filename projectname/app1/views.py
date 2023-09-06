@@ -130,7 +130,7 @@ class ItemViewSet(APIView):
         serializer = ItemSerializer(item, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class IteamUpdateAPIView(APIView):
+class ItemUpdateAPIView(APIView):
     def put(self, request, item_id):
         item = Item.objects.get(id=item_id)
         serializer = PostItemSerializer(item, data=request.data)
@@ -139,9 +139,9 @@ class IteamUpdateAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error": "invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-class IteamDeleteAPIView(APIView):
+
+class ItemDeleteAPIView(APIView):
     def delete(self, request, item_id):
         item = Item.objects.get(id=item_id)
         item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+        return Response({"message": "deleted"}, status=status.HTTP_200_OK)
