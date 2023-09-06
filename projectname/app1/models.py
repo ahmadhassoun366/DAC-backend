@@ -89,3 +89,59 @@ class Company(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+class Item(models.Model):
+    class Meta:
+        verbose_name = "Item"
+        verbose_name_plural = "Items"
+    manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='items')
+    supcode = models.CharField(max_length=200, null=True, blank=True)
+    code = models.CharField(max_length=200, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    unit = models.CharField(max_length=200, null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
+    total = models.FloatField(null=True, blank=True)   
+    TVA = models.BooleanField(default=False)
+    TVA_value = models.FloatField(null=True, blank=True) 
+    TTC = models.FloatField(null=True, blank=True)
+    place = models.CharField(max_length=200, null=True, blank=True)
+    addValueCost = models.FloatField(null=True, blank=True)
+    unit_price = models.FloatField(null=True, blank=True)
+    cost = models.FloatField(null=True, blank=True)
+    revenue = models.FloatField(null=True, blank=True)
+    purchase = models.FloatField(null=True, blank=True)
+    expense = models.FloatField(null=True, blank=True)
+    final_good = models.BooleanField(default=True)
+    change_inv_acc = models.BooleanField(default=False)
+    inventory_acc = models.CharField(max_length=20, choices=[('A', 'Inventory Account A'), ('B', 'Inventory Account B')])
+    # image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
+
+    def calculate_total(self):
+        if self.quantity and self.unit_price:
+            self.total = self.quantity * self.unit_price
+        else:
+            self.total = None
+
+    def calculate_TTC(self):
+        if self.TVA and self.total:
+            self.TTC = self.total + self.TVA_value
+        else:
+            self.TTC = None
+
+    def calculate_cost(self):
+        if self.quantity and self.unit_price:
+            self.cost = self.quantity * self.unit_price + self.addValueCost
+        else:
+            self.cost = None
+
+    def calculate_revenue(self):
+        if self.quantity and self.unit_price:
+            self.revenue = self.quantity * self.unit_price
+        else:
+            self.revenue = None
+
+    def calculate_profit(self):
+        if self.revenue and self.cost:
+            self.profit = self.revenue - self.cost
+        else:
+            self.profit = None

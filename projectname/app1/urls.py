@@ -16,4 +16,12 @@ urlpatterns = [
 
     path('company/<int:manager_id>/', CompanyViewSet.as_view(), name='manager_company'),
     path('company_register/', CompanyRegisterCreateAPIView.as_view(), name='company_register'),
+
+    path('item/add', ItemCreateAPIView.as_view(), name='addItem'),
+    path('item/<int:manager_id>/', ItemViewSet.as_view(), name='Item'),
+    # path('item/<int:company_id>/<int:item_id>/', IteamViewSet.as_view(), name='Item'),
+    path('item/<int:item_id>/update/', IteamUpdateAPIView.as_view(), name='updateItem'),
+    path('item/<int:item_id>/delete/', IteamDeleteAPIView.as_view(), name='deleteItem'),
+    path('item/details/<int:item_id>/', ItemIdViewSet.as_view(), name='Item'),
+
 ]

@@ -32,6 +32,10 @@ class ManagerAdmin(admin.ModelAdmin):
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'logo', 'manager', 'brand','taxIdentification','commercialRegister','phone','Address')
 
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ('code','name','unit','quantity')
+
 admin.site.register(CustomUser, EmailUserAdmin)
 admin.site.register(Manager, ManagerAdmin)
 admin.site.register(Company, CompanyAdmin)
+admin.site.register(Item, ItemAdmin)

@@ -31,10 +31,10 @@ class ManagerRegisterCreateAPIView(APIView):
             user.save()
 
             # Create a Seeker instance and associate it with the newly created user
-            manager = {
+            manager_data = {
                 'user': user.id,
             }
-            manager_serializer = PostManagerSerializer(data=auditor_data)
+            manager_serializer = PostManagerSerializer(data=manager_data)
             if manager_serializer.is_valid():
                 manager_serializer.save()
             else:
@@ -81,3 +81,67 @@ class CompanyViewSet(APIView):
         company = Company.objects.filter(manager=manager_id)
         serializer = GetCompanySerializer(company, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+# @permission_classes([IsAuthenticated])
+class ItemCreateAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        itemData = {
+            'manager': data.get('manager'),
+            'supcode': data.get('supcode'),
+            'code': data.get('code'),
+            'name': data.get('name'),
+            'unit': data.get('unit'),
+            'quantity': data.get('quantity'),
+            'total': data.get('total'),
+            'TVA': data.get('TVA'),
+            'TVA_value': data.get('TVA_value'),
+            'TTC': data.get('TTC'),
+            'place': data.get('place'),
+            'addValueCost': data.get('addValueCost'),
+            'unit_price': data.get('unit_price'),
+            'cost': data.get('cost'),
+            'revenue': data.get('revenue'),
+            'purchase': data.get('purchase'),
+            'expense': data.get('expense'),
+            'final_good': data.get('final_good'),
+            'change_inv_acc': data.get('change_inv_acc'),
+            'inventory_acc': data.get('inventory_acc'),
+            # 'image': data.get('image')  # You'll likely handle this separately
+        }
+        print(itemData)
+
+        serializer = PostItemSerializer(data=itemData)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ItemIdViewSet(APIView):
+    def get(self, request, item_id):
+        item = Item.objects.filter(id=item_id)
+        serializer = ItemSerializer(item, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ItemViewSet(APIView):
+    def get(self, request, manager_id):
+        item = Item.objects.filter(manager=manager_id)
+        serializer = ItemSerializer(item, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class IteamUpdateAPIView(APIView):
+    def put(self, request, item_id):
+        item = Item.objects.get(id=item_id)
+        serializer = PostItemSerializer(item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class IteamDeleteAPIView(APIView):
+    def delete(self, request, item_id):
+        item = Item.objects.get(id=item_id)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

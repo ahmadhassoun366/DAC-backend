@@ -61,3 +61,31 @@ class GetCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
+
+class ItemSerializer(serializers.ModelSerializer):
+    manager = ManagerSerializer(read_only=True)
+    class Meta:
+        model = Item
+        fields = "__all__"
+
+class PostItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = "__all__"
+
+class ItemIdSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+
+    class Meta:
+        model = Item
+        fields = "__all__"
+
+class ItemUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = "__all__"
+
+class ItemDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = "__all__"
