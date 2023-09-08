@@ -125,6 +125,9 @@ class ItemIdViewSet(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ItemViewSet(APIView):
+
+
+    
     def get(self, request, manager_id):
         item = Item.objects.filter(manager=manager_id)
         serializer = ItemSerializer(item, many=True)
@@ -132,16 +135,25 @@ class ItemViewSet(APIView):
 
 class ItemUpdateAPIView(APIView):
     def put(self, request, item_id):
-        item = Item.objects.get(id=item_id)
+        try:
+            item = Item.objects.get(id=item_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = PostItemSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({"error": "invalid data"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ItemDeleteAPIView(APIView):
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+        
+class Delete(APIView):
     def delete(self, request, item_id):
-        item = Item.objects.get(id=item_id)
+        try:
+            item = Item.objects.get(id=item_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        
         item.delete()
-        return Response({"message": "deleted"}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+

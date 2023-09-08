@@ -19,8 +19,9 @@ urlpatterns = [
 
     path('item/add', ItemCreateAPIView.as_view(), name='addItem'),
     path('item/<int:manager_id>/', ItemViewSet.as_view(), name='Item'),
-    path('item/<int:item_id>/update/', ItemUpdateAPIView.as_view(), name='updateItem'),
     path('item/details/<int:item_id>/', ItemIdViewSet.as_view(), name='Item'),
-    path('item/<int:item_id>/delete/', ItemDeleteAPIView.as_view(), name='deleteItem'),
+    path('item/<int:item_id>/update', ItemUpdateAPIView.as_view(), name='updateItem'),
+    path('item/<int:item_id>/delete', Delete.as_view(), name='deleteItem'),
+    
 
 ]
