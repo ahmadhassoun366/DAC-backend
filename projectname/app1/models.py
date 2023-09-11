@@ -90,6 +90,17 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class TVA(models.Model):
+    class Meta:
+        verbose_name = "TVA"
+        verbose_name_plural = "TVAs"
+
+    name = models.CharField(max_length=100)
+    rate = models.FloatField()  # Store it as percentage e.g. 18.0 for 18%
+
+    def __str__(self):
+        return f"{self.name} ({self.rate}%)"
+
 class Item(models.Model):
     class Meta:
         verbose_name = "Item"
@@ -101,7 +112,7 @@ class Item(models.Model):
     unit = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total = models.FloatField(null=True, blank=True)   
-    TVA = models.BooleanField(default=False)
+    TVA = models.ForeignKey(TVA, on_delete=models.SET_NULL, null=True, blank=True)
     TVA_value = models.FloatField(null=True, blank=True) 
     TTC = models.FloatField(null=True, blank=True)
     place = models.CharField(max_length=200, null=True, blank=True)
@@ -114,7 +125,7 @@ class Item(models.Model):
     final_good = models.BooleanField(default=True)
     change_inv_acc = models.BooleanField(default=False)
     inventory_acc = models.CharField(max_length=20, choices=[('A', 'Inventory Account A'), ('B', 'Inventory Account B')], null=True, blank=True , default='A')
-    # image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
+    image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
 
     def calculate_total(self):
         if self.quantity and self.unit_price:
@@ -145,3 +156,4 @@ class Item(models.Model):
             self.profit = self.revenue - self.cost
         else:
             self.profit = None
+

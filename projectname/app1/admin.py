@@ -35,7 +35,11 @@ class CompanyAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('code','name','unit','quantity')
 
+class TVAAdmin(admin.ModelAdmin):
+    list_display = ('name','rate')
+
 admin.site.register(CustomUser, EmailUserAdmin)
 admin.site.register(Manager, ManagerAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Item, ItemAdmin)
+admin.site.register(TVA, TVAAdmin)
