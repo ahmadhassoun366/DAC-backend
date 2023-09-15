@@ -100,19 +100,16 @@ class ItemCreateAPIView(APIView):
             'quantity': itemData.get('quantity'),
             'total': itemData.get('total'),
             'TVA': itemData.get('TVA'),
-            'TVA_value': itemData.get('TVA_value'),
             'TTC': itemData.get('TTC'),
             'place': itemData.get('place'),
             'addValueCost': itemData.get('addValueCost'),
-            'unit_price': itemData.get('unit_price'),
             'cost': itemData.get('cost'),
             'revenue': itemData.get('revenue'),
             'purchase': itemData.get('purchase'),
             'expense': itemData.get('expense'),
             'final_good': itemData.get('final_good'),
             'change_inv_acc': itemData.get('change_inv_acc'),
-            'inventory_acc': itemData.get('inventory_acc'),
-            'image': itemData.get('image') 
+            'image': itemData.get('image')
         })
         print(itemData)
 

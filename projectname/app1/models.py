@@ -71,9 +71,6 @@ class Manager(models.Model):
     def __str__(self):
         return f"{self.user}"
 
-
-
-
 class Company(models.Model):
     class Meta:
         verbose_name = "Company"
@@ -90,21 +87,29 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-class TVA(models.Model):
-    class Meta:
-        verbose_name = "TVA"
-        verbose_name_plural = "TVAs"
-
-    name = models.CharField(max_length=100)
-    rate = models.FloatField()  # Store it as percentage e.g. 18.0 for 18%
-
+class Management(models.Model):
+    TVA = models.FloatField(null=True, blank=True)
     def __str__(self):
-        return f"{self.name} ({self.rate}%)"
+        return f"{self.TVA}"
+
+class Accounting(models.Model):
+    revenue = models.FloatField(null=True, blank=True)
+    purchase = models.FloatField(null=True, blank=True)
+    expense = models.FloatField(null=True, blank=True)
+    change_inv_acc = models.BooleanField(default=False)
+    def __str__(self):
+        return f"{self.revenue}"
 
 class Item(models.Model):
     class Meta:
         verbose_name = "Item"
         verbose_name_plural = "Items"
+
+    FINAL_GOOD_CHOICES = [
+        ('start', 'Start'),
+        ('mid', 'Mid'),
+        ('finish', 'Finished'),
+    ]   
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='items')
     supcode = models.CharField(max_length=200, null=True, blank=True)
     code = models.CharField(max_length=200, null=True, blank=True)
@@ -112,48 +117,27 @@ class Item(models.Model):
     unit = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total = models.FloatField(null=True, blank=True)   
-    TVA = models.ForeignKey(TVA, on_delete=models.SET_NULL, null=True, blank=True)
-    TVA_value = models.FloatField(null=True, blank=True) 
+    TVA = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
     TTC = models.FloatField(null=True, blank=True)
     place = models.CharField(max_length=200, null=True, blank=True)
     addValueCost = models.FloatField(null=True, blank=True)
-    unit_price = models.FloatField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)
     cost = models.FloatField(null=True, blank=True)
-    revenue = models.FloatField(null=True, blank=True)
-    purchase = models.FloatField(null=True, blank=True)
-    expense = models.FloatField(null=True, blank=True)
-    final_good = models.BooleanField(default=True)
-    change_inv_acc = models.BooleanField(default=False)
-    inventory_acc = models.CharField(max_length=20, choices=[('A', 'Inventory Account A'), ('B', 'Inventory Account B')], null=True, blank=True , default='A')
+    revenue = models.ForeignKey(Accounting, related_name='revenue_item', on_delete=models.SET_NULL, null=True, blank=True)
+    purchase = models.ForeignKey(Accounting, related_name='purchase_item', on_delete=models.SET_NULL, null=True, blank=True)
+    expense = models.ForeignKey(Accounting, related_name='expense_item', on_delete=models.SET_NULL, null=True, blank=True)
+    final_good = models.CharField(max_length=10, choices=FINAL_GOOD_CHOICES, default='finished')
+    change_inv_acc = models.ForeignKey(Accounting, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
 
-    def calculate_total(self):
-        if self.quantity and self.unit_price:
-            self.total = self.quantity * self.unit_price
-        else:
-            self.total = None
+    def save(self, *args, **kwargs):
+        # If you have all the necessary fields to calculate 'total', then do so
+        if self.quantity is not None and self.price is not None:
+            self.total = self.quantity * self.price
 
-    def calculate_TTC(self):
-        if self.TVA and self.total:
-            self.TTC = self.total + self.TVA_value
-        else:
-            self.TTC = None
+        if self.addValueCost is not None and self.price is not None:
+            self.cost = self.addValueCost + self.price
 
-    def calculate_cost(self):
-        if self.quantity and self.unit_price:
-            self.cost = self.quantity * self.unit_price + self.addValueCost
-        else:
-            self.cost = None
-
-    def calculate_revenue(self):
-        if self.quantity and self.unit_price:
-            self.revenue = self.quantity * self.unit_price
-        else:
-            self.revenue = None
-
-    def calculate_profit(self):
-        if self.revenue and self.cost:
-            self.profit = self.revenue - self.cost
-        else:
-            self.profit = None
-
+        if self.cost is not None and self.TVA is not None:
+            self.TTC = self.cost * self.TVA.TVA
+        super(Item, self).save(*args, **kwargs)
