@@ -109,7 +109,8 @@ class ItemCreateAPIView(APIView):
             'expense': itemData.get('expense'),
             'final_good': itemData.get('final_good'),
             'change_inv_acc': itemData.get('change_inv_acc'),
-            'image': itemData.get('image')
+            'image': itemData.get('image'),
+            'minimum_quantity': itemData.get('minimum_quantity'),
         })
         print(itemData)
 
@@ -155,3 +156,14 @@ class Delete(APIView):
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class ManagementViewSet(APIView):
+    def get(self, request, company_id):
+        management = Management.objects.filter(company=company_id)
+        serializer = GetManagementSerializer(management, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class AccountingViewSet(APIView):
+    def get(self, request, company_id):
+        accounting = Accounting.objects.filter(company=company_id)
+        serializer = GetAccoutingSerializer(accounting, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

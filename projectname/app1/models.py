@@ -88,17 +88,20 @@ class Company(models.Model):
         return f"{self.name}"
 
 class Management(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='managements')
     TVA = models.FloatField(null=True, blank=True)
     def __str__(self):
         return f"{self.TVA}"
 
 class Accounting(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='accountings')
     revenue = models.FloatField(null=True, blank=True)
     purchase = models.FloatField(null=True, blank=True)
     expense = models.FloatField(null=True, blank=True)
     change_inv_acc = models.BooleanField(default=False)
     def __str__(self):
-        return f"{self.revenue}"
+        return f"Accounting object for company {self.company.name} with Revenue: {self.revenue}, Purchase: {self.purchase}, Expense: {self.expense}, Change in Inv Acc: {self.change_inv_acc}"
+
 
 class Item(models.Model):
     class Meta:
@@ -129,7 +132,8 @@ class Item(models.Model):
     final_good = models.CharField(max_length=10, choices=FINAL_GOOD_CHOICES, default='finished')
     change_inv_acc = models.ForeignKey(Accounting, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
-
+    minimum_quantity = models.IntegerField(null=True, blank=True)
+    
     def save(self, *args, **kwargs):
         # If you have all the necessary fields to calculate 'total', then do so
         if self.quantity is not None and self.price is not None:

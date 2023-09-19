@@ -89,3 +89,15 @@ class ItemDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = "__all__"
+
+class GetAccoutingSerializer(serializers.ModelSerializer):
+    item = ItemIdSerializer(read_only=True)
+    class Meta:
+        model = Accounting
+        fields = "__all__"
+
+class GetManagementSerializer(serializers.ModelSerializer):
+    item = ItemIdSerializer(read_only=True)
+    class Meta:
+        model = Management
+        fields = "__all__"
