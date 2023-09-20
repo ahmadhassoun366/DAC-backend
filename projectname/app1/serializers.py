@@ -27,12 +27,8 @@ class POSTUserSerializer(serializers.ModelSerializer):
         return user
 
     
-
-
 class ManagerSerializer(serializers.ModelSerializer):
     user = GETUserSerializer(read_only=True)
-
-
     class Meta:
         model = Manager
         fields = "__all__"
@@ -62,8 +58,23 @@ class GetCompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = "__all__"
 
+class GetAccoutingSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    manager = ManagerSerializer(read_only=True)
+    class Meta:
+        model = Accounting
+        fields = "__all__"
+
+class GetManagementSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    class Meta:
+        model = Management
+        fields = "__all__"
+
 class ItemSerializer(serializers.ModelSerializer):
     manager = ManagerSerializer(read_only=True)
+    Management = GetManagementSerializer(read_only=True)
+    Accounting = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
@@ -75,12 +86,15 @@ class PostItemSerializer(serializers.ModelSerializer):
 
 class ItemIdSerializer(serializers.ModelSerializer):
     company = GetCompanySerializer(read_only=True)
-
+    Management = GetManagementSerializer(read_only=True)
+    Acc = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
 
 class ItemUpdateSerializer(serializers.ModelSerializer):
+    Management = GetManagementSerializer(read_only=True)
+    Accounting = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
@@ -88,16 +102,4 @@ class ItemUpdateSerializer(serializers.ModelSerializer):
 class ItemDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = "__all__"
-
-class GetAccoutingSerializer(serializers.ModelSerializer):
-    item = ItemIdSerializer(read_only=True)
-    class Meta:
-        model = Accounting
-        fields = "__all__"
-
-class GetManagementSerializer(serializers.ModelSerializer):
-    item = ItemIdSerializer(read_only=True)
-    class Meta:
-        model = Management
         fields = "__all__"

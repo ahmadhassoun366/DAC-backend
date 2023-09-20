@@ -101,8 +101,7 @@ class Accounting(models.Model):
     change_inv_acc = models.BooleanField(default=False)
     def __str__(self):
         return f"Accounting object for company {self.company.name} with Revenue: {self.revenue}, Purchase: {self.purchase}, Expense: {self.expense}, Change in Inv Acc: {self.change_inv_acc}"
-
-
+        
 class Item(models.Model):
     class Meta:
         verbose_name = "Item"
@@ -113,6 +112,11 @@ class Item(models.Model):
         ('mid', 'Mid'),
         ('finish', 'Finished'),
     ]   
+    TVA = [
+        ('0.1', '10%'),
+        ('0.05', '5%'),
+        ('0.0', '0%'),
+    ]
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='items')
     supcode = models.CharField(max_length=200, null=True, blank=True)
     code = models.CharField(max_length=200, null=True, blank=True)
@@ -120,20 +124,24 @@ class Item(models.Model):
     unit = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total = models.FloatField(null=True, blank=True)   
-    TVA = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
+    # TVA = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
     TTC = models.FloatField(null=True, blank=True)
     place = models.CharField(max_length=200, null=True, blank=True)
     addValueCost = models.FloatField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     cost = models.FloatField(null=True, blank=True)
-    revenue = models.ForeignKey(Accounting, related_name='revenue_item', on_delete=models.SET_NULL, null=True, blank=True)
-    purchase = models.ForeignKey(Accounting, related_name='purchase_item', on_delete=models.SET_NULL, null=True, blank=True)
-    expense = models.ForeignKey(Accounting, related_name='expense_item', on_delete=models.SET_NULL, null=True, blank=True)
+    # revenue = models.ForeignKey(Accounting, related_name='revenue_item', on_delete=models.SET_NULL, null=True, blank=True)
+    # purchase = models.ForeignKey(Accounting, related_name='purchase_item', on_delete=models.SET_NULL, null=True, blank=True)
+    # expense = models.ForeignKey(Accounting, related_name='expense_item', on_delete=models.SET_NULL, null=True, blank=True)
     final_good = models.CharField(max_length=10, choices=FINAL_GOOD_CHOICES, default='finished')
-    change_inv_acc = models.ForeignKey(Accounting, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
+    # change_inv_acc = models.ForeignKey(Accounting, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
     minimum_quantity = models.IntegerField(null=True, blank=True)
-    
+    revenue = models.FloatField(null=True, blank=True)
+    purchase = models.FloatField(null=True, blank=True)
+    expense = models.FloatField(null=True, blank=True)
+    change_inv_acc = models.BooleanField(default=False)
+    tva = models.FloatField(null=True, blank=True,choices=TVA, default='0.0')
     def save(self, *args, **kwargs):
         # If you have all the necessary fields to calculate 'total', then do so
         if self.quantity is not None and self.price is not None:
@@ -142,6 +150,16 @@ class Item(models.Model):
         if self.addValueCost is not None and self.price is not None:
             self.cost = self.addValueCost + self.price
 
-        if self.cost is not None and self.TVA is not None:
-            self.TTC = self.cost * self.TVA.TVA
+        if self.cost is not None and self.tva is not None:
+            self.TTC = self.cost * float(self.tva)
         super(Item, self).save(*args, **kwargs)
+
+class Unite (models.Model):
+    class Meta:
+        verbose_name = "Unite"
+        verbose_name_plural = "Unites"
+    name = models.CharField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return f"{self.name}"
+
+   
