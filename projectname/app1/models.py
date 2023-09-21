@@ -142,6 +142,7 @@ class Item(models.Model):
     purchase = models.FloatField(null=True, blank=True)
     expense = models.FloatField(null=True, blank=True)
     change_inv_acc = models.BooleanField(default=False)
+    kind = models.CharField(max_length=200, null=True, blank=True)
     tva = models.FloatField(choices=TVA, null=True, blank=True)
     
     def save(self, *args, **kwargs):
@@ -168,7 +169,7 @@ class SubUnit (models.Model):
     sub_unit_symbol = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return f"{self.name}"
-        
+
 class Unit (models.Model):
     class Meta:
         verbose_name = "Unit"

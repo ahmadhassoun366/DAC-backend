@@ -21,6 +21,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.utils.encoding import force_str, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import QueryDict
 
 class ManagerRegisterCreateAPIView(APIView):
     def post(self, request):
@@ -85,11 +86,12 @@ class CompanyViewSet(APIView):
 # @permission_classes([IsAuthenticated])
 class ItemCreateAPIView(APIView):
     def post(self, request):
+        itemData = request.data.copy() if isinstance(request.data, QueryDict) else dict(request.data)
+        
         if 'image' in request.FILES:
-            itemData = request.data.dict()  # Convert QueryDict to a regular Python dict
-            itemData['image'] = request.FILES['image']  # Add the image
-        else:
-            itemData = request.data
+            itemData['image'] = request.FILES['image']
+
+        print(itemData)
 
         itemData.update({
             'manager': itemData.get('manager'),
@@ -99,8 +101,8 @@ class ItemCreateAPIView(APIView):
             'unit': itemData.get('unit'),
             'quantity': itemData.get('quantity'),
             'total': itemData.get('total'),
-            'TVA': itemData.get('TVA'),
-            'TTC': itemData.get('TTC'),
+            'tva': itemData.get('tva'),
+            'ttc': itemData.get('ttc'),
             'place': itemData.get('place'),
             'addValueCost': itemData.get('addValueCost'),
             'cost': itemData.get('cost'),
@@ -111,6 +113,7 @@ class ItemCreateAPIView(APIView):
             'change_inv_acc': itemData.get('change_inv_acc'),
             'image': itemData.get('image'),
             'minimum_quantity': itemData.get('minimum_quantity'),
+            'kind': itemData.get('kind'),
         })
         print(itemData)
 
@@ -140,11 +143,12 @@ class ItemUpdateAPIView(APIView):
         except ObjectDoesNotExist:
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PostItemSerializer(item, data=request.data)
+        serializer = PostItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
 class Delete(APIView):
     def delete(self, request, item_id):

@@ -86,15 +86,11 @@ class PostItemSerializer(serializers.ModelSerializer):
 
 class ItemIdSerializer(serializers.ModelSerializer):
     company = GetCompanySerializer(read_only=True)
-    Management = GetManagementSerializer(read_only=True)
-    Acc = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
 
 class ItemUpdateSerializer(serializers.ModelSerializer):
-    Management = GetManagementSerializer(read_only=True)
-    Accounting = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
