@@ -167,3 +167,93 @@ class AccountingViewSet(APIView):
         accounting = Accounting.objects.filter(company=company_id)
         serializer = GetAccoutingSerializer(accounting, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UnitViewSet(APIView):
+    def get(self, request):
+        unit = Unit.objects.all()
+        serializer = UnitSerializer(unit, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UnitIdViewSet(APIView):
+    def get(self, request, unit_id):
+        unit = Unit.objects.filter(id=unit_id).first()
+        if not unit:
+            return Response({"error": "Unit not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = UnitSerializer(unit)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UnitCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostUnitSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class UnitUpdateAPIView(APIView):
+    def put(self, request, unit_id):
+        try:
+            unit = Unit.objects.get(id=unit_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Unit not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostUnitSerializer(unit, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class UnitDeleteAPIView(APIView):
+    def delete(self, request, unit_id):
+        try:
+            unit = Unit.objects.get(id=unit_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Unit not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        unit.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SubUnitViewSet(APIView):
+    def get(self, request):
+        subunit = SubUnit.objects.all()
+        serializer = SubUnitSerializer(subunit, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+class SubUnitIdViewSet(APIView):
+    def get(self, request, subunit_id):
+        subunit = SubUnit.objects.filter(id=subunit_id).first()
+        if not subunit:
+            return Response({"error": "SubUnit not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = GetSubUnitSerializer(subunit)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class SubUnitCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostSubUnitSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class SubUnitUpdateAPIView(APIView):
+    def put(self, request, subunit_id):
+        try:
+            subunit = SubUnit.objects.get(id=subunit_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "SubUnit not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostSubUnitSerializer(subunit, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class SubUnitDeleteAPIView(APIView):
+    def delete(self, request, subunit_id):
+        try:
+            subunit = SubUnit.objects.get(id=subunit_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "SubUnit not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        subunit.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

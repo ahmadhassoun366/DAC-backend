@@ -26,5 +26,17 @@ urlpatterns = [
     path('management/<int:company_id>/', ManagementViewSet.as_view(), name='management'),
     path('accounting/<int:company_id>/', AccountingViewSet.as_view(), name='accounting'),
 
+    path('unit/', UnitViewSet.as_view(), name='unit'),
+    path('unit/add', UnitCreateAPIView.as_view(), name='addUnit'),
+    path('unit/<int:unit_id>/update', UnitUpdateAPIView.as_view(), name='updateUnit'),
+    path('unit/<int:unit_id>/delete', UnitDeleteAPIView.as_view(), name='deleteUnit'),
+    path('unit/<int:unit_id>/', UnitIdViewSet.as_view(), name='unitId'),
+
+    path('subunit/', SubUnitViewSet.as_view(), name='subunit'),
+    path('subunit/add', SubUnitCreateAPIView.as_view(), name='addSubUnit'),
+    path('subunit/<int:subunit_id>/update', SubUnitUpdateAPIView.as_view(), name='updateSubUnit'),
+    path('subunit/<int:subunit_id>/delete', SubUnitDeleteAPIView.as_view(), name='deleteSubUnit'),
+    path('subunit/<int:subunit_id>/', SubUnitIdViewSet.as_view(), name='subunitId'),
+
 
 ]

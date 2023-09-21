@@ -41,9 +41,17 @@ class AccountingAdmin(admin.ModelAdmin):
 class ManagementAdmin(admin.ModelAdmin):
     list_display = ('TVA',)
 
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ('name','unit_symbol','sub_unit')
+
+class SubUnitAdmin(admin.ModelAdmin):
+    list_display = ('name','sub_unit_symbol')
+
 admin.site.register(CustomUser, EmailUserAdmin)
 admin.site.register(Manager, ManagerAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Accounting, AccountingAdmin)
 admin.site.register(Management, ManagementAdmin)
+admin.site.register(Unit, UnitAdmin)
+admin.site.register(SubUnit, SubUnitAdmin)

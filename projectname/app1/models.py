@@ -160,12 +160,26 @@ class Item(models.Model):
         super(Item, self).save(*args, **kwargs)
 
 
-class Unite (models.Model):
+class SubUnit (models.Model):
     class Meta:
-        verbose_name = "Unite"
-        verbose_name_plural = "Unites"
+        verbose_name = "SubUnit"
+        verbose_name_plural = "SubUnits"
     name = models.CharField(max_length=200, null=True, blank=True)
+    sub_unit_symbol = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return f"{self.name}"
+        
+class Unit (models.Model):
+    class Meta:
+        verbose_name = "Unit"
+        verbose_name_plural = "Units"
+    name = models.CharField(max_length=200, null=True, blank=True)
+    unit_symbol = models.CharField(max_length=200, null=True, blank=True)
+    sub_unit = models.ForeignKey(SubUnit, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return f"{self.name}"
+
+
+
 
    

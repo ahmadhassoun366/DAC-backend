@@ -103,3 +103,66 @@ class ItemDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = "__all__"
+
+class SubUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
+
+class UnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+
+class GetSubUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
+
+class GetSubUnitIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
+
+class UnitIdSerializer(serializers.ModelSerializer):
+    sub_unit = GetSubUnitIdSerializer(read_only=True)
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+class GetUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+class PostUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+class UnitUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+class UnitDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+
+class PostSubUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
+
+class SubUnitUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
+
+class SubUnitDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubUnit
+        fields = "__all__"
