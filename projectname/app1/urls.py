@@ -24,7 +24,14 @@ urlpatterns = [
     path('item/<int:item_id>/delete', Delete.as_view(), name='deleteItem'),
     
     path('management/<int:company_id>/', ManagementViewSet.as_view(), name='management'),
+    path('management/add', ManagementCreateAPIView.as_view(), name='addManagement'),
+    path('management/<int:management_id>/update', ManagementUpdateAPIView.as_view(), name='updateManagement'),
+    path('management/<int:management_id>/delete', ManagementDeleteAPIView.as_view(), name='deleteManagement'),
+    
     path('accounting/<int:company_id>/', AccountingViewSet.as_view(), name='accounting'),
+    path('accounting/add', AccountingCreateAPIView.as_view(), name='addAccounting'),
+    path('accounting/<int:accounting_id>/update', AccountingUpdateAPIView.as_view(), name='updateAccounting'),
+    path('accounting/<int:accounting_id>/delete', AccountingDeleteAPIView.as_view(), name='deleteAccounting'),
 
     path('unit/', UnitViewSet.as_view(), name='unit'),
     path('unit/add', UnitCreateAPIView.as_view(), name='addUnit'),

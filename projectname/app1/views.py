@@ -261,3 +261,66 @@ class SubUnitDeleteAPIView(APIView):
 
         subunit.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ManagementCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostManagementSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ManagementUpdateAPIView(APIView):
+    def put(self, request, management_id):
+        try:
+            management = Management.objects.get(id=management_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Management not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostManagementSerializer(management, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ManagementDeleteAPIView(APIView):
+    def delete(self, request, management_id):
+        try:
+            management = Management.objects.get(id=management_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Management not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        management.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AccountingCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostAccountingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class AccountingUpdateAPIView(APIView):
+    def put(self, request, accounting_id):
+        try:
+            accounting = Accounting.objects.get(id=accounting_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Accounting not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostAccountingSerializer(accounting, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class AccountingDeleteAPIView(APIView):
+    def delete(self, request, accounting_id):
+        try:
+            accounting = Accounting.objects.get(id=accounting_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Accounting not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        accounting.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    

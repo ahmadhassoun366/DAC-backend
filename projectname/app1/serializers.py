@@ -66,26 +66,38 @@ class GetAccoutingSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class GetManagementSerializer(serializers.ModelSerializer):
-    company = GetCompanySerializer(read_only=True)
     class Meta:
         model = Management
         fields = "__all__"
 
+
+class PostManagementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Management
+        fields = "__all__"
+
+class PostAccountingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Accounting
+        fields = "__all__"
+
 class ItemSerializer(serializers.ModelSerializer):
     manager = ManagerSerializer(read_only=True)
-    Management = GetManagementSerializer(read_only=True)
-    Accounting = GetAccoutingSerializer(read_only=True)
+    Tva = GetManagementSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
 
 class PostItemSerializer(serializers.ModelSerializer):
+    Tva = GetManagementSerializer()
     class Meta:
         model = Item
         fields = "__all__"
 
 class ItemIdSerializer(serializers.ModelSerializer):
     company = GetCompanySerializer(read_only=True)
+    Management = GetManagementSerializer(read_only=True)
+    Accounting = GetAccoutingSerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"

@@ -125,7 +125,7 @@ class Item(models.Model):
     unit = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total = models.FloatField(null=True, blank=True)   
-    # TVA = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
+    Tva = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
     ttc = models.FloatField(null=True, blank=True)
     place = models.CharField(max_length=200, null=True, blank=True)
     addValueCost = models.FloatField(null=True, blank=True)
@@ -160,6 +160,10 @@ class Item(models.Model):
 
         super(Item, self).save(*args, **kwargs)
 
+class ManagementItem(models.Model):
+    Tva = models.FloatField(null=True, blank=True)
+    def __str__(self):
+        return f"{self.management} - {self.item}"
 
 class SubUnit (models.Model):
     class Meta:
