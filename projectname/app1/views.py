@@ -262,65 +262,211 @@ class SubUnitDeleteAPIView(APIView):
         subunit.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ManagementCreateAPIView(APIView):
+
+class TVAIdViewSet(APIView):
+    def get(self, request, tva_id):
+        tva = TVA.objects.filter(id=tva_id).first()
+        if not tva:
+            return Response({"error": "TVA not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = TVASerializer(tva)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TVACreateAPIView(APIView):
     def post(self, request):
-        serializer = PostManagementSerializer(data=request.data)
+        serializer = PostTVASerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-class ManagementUpdateAPIView(APIView):
-    def put(self, request, management_id):
+class TVAUpdateAPIView(APIView):
+    def put(self, request, tva_id):
         try:
-            management = Management.objects.get(id=management_id)
+            tva = TVA.objects.get(id=tva_id)
         except ObjectDoesNotExist:
-            return Response({"error": "Management not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "TVA not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PostManagementSerializer(management, data=request.data)
+        serializer = PostTVASerializer(tva, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-class ManagementDeleteAPIView(APIView):
-    def delete(self, request, management_id):
+class TVADeleteAPIView(APIView):
+    def delete(self, request, tva_id):
         try:
-            management = Management.objects.get(id=management_id)
+            tva = TVA.objects.get(id=tva_id)
         except ObjectDoesNotExist:
-            return Response({"error": "Management not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "TVA not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        management.delete()
+        tva.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class AccountingCreateAPIView(APIView):
+
+# ~~~~~~~~~~~~~~~~~~~~~~ Purchase Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+
+
+class RevenueIdViewSet(APIView):
+    def get(self, request, revenue_id):
+        revenue = Revenue.objects.filter(id=revenue_id).first()
+        if not revenue:
+            return Response({"error": "Revenue not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = GetRevenueSerializer(revenue)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class RevenueCreateAPIView(APIView):
     def post(self, request):
-        serializer = PostAccountingSerializer(data=request.data)
+        serializer = PostRevenueSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-class AccountingUpdateAPIView(APIView):
-    def put(self, request, accounting_id):
+class RevenueUpdateAPIView(APIView):
+    def put(self, request, revenue_id):
         try:
-            accounting = Accounting.objects.get(id=accounting_id)
+            revenue = Revenue.objects.get(id=revenue_id)
         except ObjectDoesNotExist:
-            return Response({"error": "Accounting not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Revenue not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PostAccountingSerializer(accounting, data=request.data)
+        serializer = PostRevenueSerializer(revenue, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-class AccountingDeleteAPIView(APIView):
-    def delete(self, request, accounting_id):
+class RevenueDeleteAPIView(APIView):
+    def delete(self, request, revenue_id):
         try:
-            accounting = Accounting.objects.get(id=accounting_id)
+            revenue = Revenue.objects.get(id=revenue_id)
         except ObjectDoesNotExist:
-            return Response({"error": "Accounting not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Revenue not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        accounting.delete()
+        revenue.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~ Expense Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+
+
+class ExpenseIdViewSet(APIView):
+    def get(self, request, expense_id):
+        expense = Expense.objects.filter(id=expense_id).first()
+        if not expense:
+            return Response({"error": "Expense not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = GetExpenseSerializer(expense)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ExpenseCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostExpenseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ExpenseUpdateAPIView(APIView):
+    def put(self, request, expense_id):
+        try:
+            expense = Expense.objects.get(id=expense_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Expense not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostExpenseSerializer(expense, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ExpenseDeleteAPIView(APIView):
+    def delete(self, request, expense_id):
+        try:
+            expense = Expense.objects.get(id=expense_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Expense not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        expense.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ~~~~~~~~~~~~~~~~~~~~~~ Purchase Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+
+
+class PurchaseIdViewSet(APIView):
+    def get(self, request, purchase_id):
+        purchase = Purchase.objects.filter(id=purchase_id).first()
+        if not purchase:
+            return Response({"error": "Purchase not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = GetPurchaseSerializer(purchase)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PurchaseCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostPurchaseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class PurchaseUpdateAPIView(APIView):
+    def put(self, request, purchase_id):
+        try:
+            purchase = Purchase.objects.get(id=purchase_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Purchase not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostPurchaseSerializer(purchase, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class PurchaseDeleteAPIView(APIView):
+    def delete(self, request, purchase_id):
+        try:
+            purchase = Purchase.objects.get(id=purchase_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "Purchase not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        purchase.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChangeInvAccIdViewSet(APIView):
+    def get(self, request, change_inv_acc_id):
+        change_inv_acc = ChangeInvAcc.objects.filter(id=change_inv_acc_id).first()
+        if not change_inv_acc:
+            return Response({"error": "ChangeInvAcc not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = GetChangeInvAccSerializer(change_inv_acc)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+class ChangeInvAccCreateAPIView(APIView):
+    def post(self, request):
+        serializer = PostChangeInvAccSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangeInvAccUpdateAPIView(APIView):
+    def put(self, request, change_inv_acc_id):
+        try:
+            change_inv_acc = ChangeInvAcc.objects.get(id=change_inv_acc_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "ChangeInvAcc not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostChangeInvAccSerializer(change_inv_acc, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangeInvAccDeleteAPIView(APIView):
+    def delete(self, request, change_inv_acc_id):
+        try:
+            change_inv_acc = ChangeInvAcc.objects.get(id=change_inv_acc_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "ChangeInvAcc not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        change_inv_acc.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

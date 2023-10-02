@@ -58,46 +58,35 @@ class GetCompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = "__all__"
 
-class GetAccoutingSerializer(serializers.ModelSerializer):
-    company = GetCompanySerializer(read_only=True)
-    manager = ManagerSerializer(read_only=True)
-    class Meta:
-        model = Accounting
-        fields = "__all__"
 
-class GetManagementSerializer(serializers.ModelSerializer):
+class GetTVASerializer(serializers.ModelSerializer):
     class Meta:
-        model = Management
+        model = TVA
         fields = "__all__"
 
 
-class PostManagementSerializer(serializers.ModelSerializer):
+class PostTVASerializer(serializers.ModelSerializer):
     class Meta:
-        model = Management
+        model = TVA
         fields = "__all__"
 
-class PostAccountingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Accounting
-        fields = "__all__"
 
 class ItemSerializer(serializers.ModelSerializer):
     manager = ManagerSerializer(read_only=True)
-    Tva = GetManagementSerializer(read_only=True)
+    tva = GetTVASerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
 
 class PostItemSerializer(serializers.ModelSerializer):
-    Tva = GetManagementSerializer()
+    tva = GetTVASerializer()
     class Meta:
         model = Item
         fields = "__all__"
 
 class ItemIdSerializer(serializers.ModelSerializer):
     company = GetCompanySerializer(read_only=True)
-    Management = GetManagementSerializer(read_only=True)
-    Accounting = GetAccoutingSerializer(read_only=True)
+    TVA = GetTVASerializer(read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
@@ -175,3 +164,57 @@ class SubUnitDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubUnit
         fields = "__all__"
+
+
+# ~~~~~~~~~~~~~~~~~~ Expense Serializers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class PostExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expense
+        fields = "__all__"
+class GetExpenseSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    class Meta:
+        model = Expense
+        fields = "__all__"
+
+# ~~~~~~~~~~~~~~~~~~ Purchase Serializers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class PostPurchaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Purchase
+        fields = "__all__"
+
+
+class GetPurchaseSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    class Meta:
+        model = Purchase
+        fields = "__all__"
+
+# ~~~~~~~~~~~~~~~~~~ Revenue Serializers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class PostRevenueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Revenue
+        fields = "__all__"
+
+class GetRevenueSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    class Meta:
+        model = Revenue
+        fields = "__all__"
+
+# ~~~~~~~~~~~~~~~~~~ ChangeInvAcc Serializers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class GetChangeInvAccSerializer(serializers.ModelSerializer):
+    company = GetCompanySerializer(read_only=True)
+    class Meta:
+        model = ChangeInvAcc
+        fields = "__all__"
+
+class PostChangeInvAccCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChangeInvAcc
+        fields = "__all__"
+        

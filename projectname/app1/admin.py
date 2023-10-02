@@ -35,11 +35,8 @@ class CompanyAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('code','name','unit','quantity')
 
-class AccountingAdmin(admin.ModelAdmin):
-    list_display = ('revenue','purchase','expense','change_inv_acc')
-
-class ManagementAdmin(admin.ModelAdmin):
-    list_display = ('TVA',)
+class TVAAdmin(admin.ModelAdmin):
+    list_display = ('company','value')
 
 class UnitAdmin(admin.ModelAdmin):
     list_display = ('name','unit_symbol','sub_unit')
@@ -47,11 +44,26 @@ class UnitAdmin(admin.ModelAdmin):
 class SubUnitAdmin(admin.ModelAdmin):
     list_display = ('name','sub_unit_symbol')
 
+class RevenueAdmin(admin.ModelAdmin):
+    list_display =('company','value')
+
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display =('company','value')
+
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ('company','value')
+
+class ChangeInvAccAdmin(admin.ModelAdmin):
+    list_display =('company','value')
+
 admin.site.register(CustomUser, EmailUserAdmin)
 admin.site.register(Manager, ManagerAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Item, ItemAdmin)
-admin.site.register(Accounting, AccountingAdmin)
-admin.site.register(Management, ManagementAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(SubUnit, SubUnitAdmin)
+admin.site.register(Revenue, RevenueAdmin)
+admin.site.register(Expense, ExpenseAdmin)
+admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(ChangeInvAcc, ChangeInvAccAdmin)
+admin.site.register(TVA, TVAAdmin)

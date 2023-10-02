@@ -87,21 +87,42 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-class Management(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='managements')
-    TVA = models.FloatField(null=True, blank=True)
-    def __str__(self):
-        return f"{self.TVA}"
 
-class Accounting(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='accountings')
-    revenue = models.FloatField(null=True, blank=True)
-    purchase = models.FloatField(null=True, blank=True)
-    expense = models.FloatField(null=True, blank=True)
-    change_inv_acc = models.BooleanField(default=False)
+class TVA (models.Model):
+    class Meta:
+        verbose_name = "TVA"
+        verbose_name_plural = "TVAs"
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='managements')
+    value = models.FloatField(null=True, blank=True)
     def __str__(self):
-        return f"Accounting object for company {self.company.name} with Revenue: {self.revenue}, Purchase: {self.purchase}, Expense: {self.expense}, Change in Inv Acc: {self.change_inv_acc}"
-        
+        return f"{self.value}"
+
+class Revenue(models.Model):
+    value = models.FloatField(null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='revnues')
+    def __str__(self):
+        return f"{self.value}"
+
+class Purchase(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='purchases')
+    value = models.FloatField(null=True, blank=True)
+    def __str__(self):
+        return f"{self.value}"
+
+class Expense(models.Model):
+    value = models.FloatField(null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='expenses')
+
+    def __str__(self):
+        return f"{self.value}"
+
+class ChangeInvAcc(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='change_inv_acc')
+    value = models.BooleanField(null=True, blank=True)
+    def __str__(self):
+        return f"{self.value}"
+
+
 class Item(models.Model):
     class Meta:
         verbose_name = "Item"
@@ -113,11 +134,6 @@ class Item(models.Model):
         ('finish', 'Finished'),
     ]   
 
-    TVA = [
-        (0, '0%'),
-        (0.05, '5%'),
-        (0.1, '10%'),
-    ]
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='items')
     supcode = models.CharField(max_length=200, null=True, blank=True)
     code = models.CharField(max_length=200, null=True, blank=True)
@@ -125,25 +141,20 @@ class Item(models.Model):
     unit = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total = models.FloatField(null=True, blank=True)   
-    Tva = models.ForeignKey(Management, on_delete=models.SET_NULL, null=True, blank=True)
+    tva = models.ForeignKey(TVA, on_delete=models.SET_NULL, null=True, blank=True)
     ttc = models.FloatField(null=True, blank=True)
     place = models.CharField(max_length=200, null=True, blank=True)
     addValueCost = models.FloatField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     cost = models.FloatField(null=True, blank=True)
-    # revenue = models.ForeignKey(Accounting, related_name='revenue_item', on_delete=models.SET_NULL, null=True, blank=True)
-    # purchase = models.ForeignKey(Accounting, related_name='purchase_item', on_delete=models.SET_NULL, null=True, blank=True)
-    # expense = models.ForeignKey(Accounting, related_name='expense_item', on_delete=models.SET_NULL, null=True, blank=True)
+    revenue = models.ForeignKey(Revenue, related_name='revenue_item', on_delete=models.SET_NULL, null=True, blank=True)
+    purchase = models.ForeignKey(Purchase, related_name='purchase_item', on_delete=models.SET_NULL, null=True, blank=True)
+    expense = models.ForeignKey(Expense, related_name='expense_item', on_delete=models.SET_NULL, null=True, blank=True)
     final_good = models.CharField(max_length=10, choices=FINAL_GOOD_CHOICES, default='finished', null=True, blank=True)
-    # change_inv_acc = models.ForeignKey(Accounting, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
+    change_inv_acc = models.ForeignKey(ChangeInvAcc, related_name='change_inv_acc_item', on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='static/item_images', null=True, blank=True)
     minimum_quantity = models.IntegerField(null=True, blank=True)
-    revenue = models.FloatField(null=True, blank=True)
-    purchase = models.FloatField(null=True, blank=True)
-    expense = models.FloatField(null=True, blank=True)
-    change_inv_acc = models.BooleanField(default=False)
     kind = models.CharField(max_length=200, null=True, blank=True)
-    tva = models.FloatField(choices=TVA, null=True, blank=True)
     
     def save(self, *args, **kwargs):
         # If you have all the necessary fields to calculate 'total', then do so
