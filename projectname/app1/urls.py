@@ -23,6 +23,7 @@ urlpatterns = [
     path('item/<int:item_id>/update', ItemUpdateAPIView.as_view(), name='updateItem'),
     path('item/<int:item_id>/delete', Delete.as_view(), name='deleteItem'),
     
+    path('tva/', TVAViewSet.as_view(), name='tva'),
     path('tva/add', TVACreateAPIView.as_view(), name='addTVA'),
     path('tva/<int:tva_id>/update', TVAUpdateAPIView.as_view(), name='updateTVA'),
     path('tva/<int:tva_id>/delete', TVADeleteAPIView.as_view(), name='deleteTVA'),

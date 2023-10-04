@@ -263,12 +263,19 @@ class SubUnitDeleteAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+class TVAViewSet(APIView):
+    def get(self, request):
+        tva = TVA.objects.all()
+        serializer = GetTVASerializer(tva, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class TVAIdViewSet(APIView):
     def get(self, request, tva_id):
         tva = TVA.objects.filter(id=tva_id).first()
         if not tva:
             return Response({"error": "TVA not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = TVASerializer(tva)
+        serializer = GetTVASerializer(tva)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TVACreateAPIView(APIView):
